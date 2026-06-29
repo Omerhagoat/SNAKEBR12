@@ -1,0 +1,13 @@
+body{
+    justify-content: center;
+    align-items: center;
+    background-color: #e45ec7;
+}
+#header{
+    text-align: center;
+    color: darkgreen;
+    
+}
+.text{
+    text-align: center;
+}
