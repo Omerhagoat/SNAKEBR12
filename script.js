@@ -1,4 +1,4 @@
-const grid=document.getElemendById('grid');
+const grid=document.getElementById('grid');
 let squares = [];
 let currentSnake = [2, 1, 0];
 let direction = 1;
