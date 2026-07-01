@@ -24,15 +24,28 @@ function startGame() {
 }
 startGame();
 function move(){
+    const newHead = currentSnake[0]+direction;
 
     const hitBottom=(currentSnake[0]+20>=400 && direction === 20);
     const hitTop = (currentSnake[0]-20<0 && direction === -20);
     const hitRight = (currentSnake[0]%20 === 19 && direction === 1)
     const hitLeft = (currentSnake[0]%20 === 0 && direction === -1)
     const hitSelf = squares[currentSnake[0]+direction]?.classList.contains('snake');
+    if (hitRight || hitBottom || hitTop || hitLeft || hitSelf) {
+        return clearInterval(timerId);
+    }
     const tail = currentSnake.pop();
+    let scoreDisplay = document.getElementById('score').style.display;
+    if(squares[newHead].classList.contains('apple')) {
+        squares[newHead].classList.remove('apple');
+        squares[tail].classList.add('snake');
+        currentSnake.push(tail);
+        score++;
+        scoreDisplay.textContent = score;
+        generateApple();
+    }
     squares[tail].classList.remove('snake');
-    const newHead = currentSnake[0]+direction
+      
     currentSnake.unshift(newHead);
     squares[newHead].classList.add('snake');
 }
@@ -61,3 +74,6 @@ document.addEventListener('keydown', (e) => {
 
 
 setInterval(move, 200);
+
+
+
