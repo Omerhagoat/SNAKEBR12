@@ -58,16 +58,17 @@ function move(){
       
     currentSnake.unshift(newHead);
     squares[newHead].classList.add('snake');
-    document.addEventListener('touchstart', e=> {
+  
+}
+  document.addEventListener('touchstart', e=> {
         touchStartX = e.changedTouches[0].screenX;
         touchStartY = e.changedTouches [0].screenY;
     }, false);
-    document.addEventListener('touchstart', e=> {
+    document.addEventListener('touchend', e=> {
         touchEndX = e.changedTouches[0].screenX;
         touchEndY = e.changedTouches [0].screenY;
         handleSwipe();
     }, false);
-}
 function handleSwipe(){
     const dx=touchEndX-touchStartX
     const dy= touchEndY-touchStartY
