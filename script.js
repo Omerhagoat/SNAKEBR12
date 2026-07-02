@@ -13,16 +13,25 @@ function createBoard(){
         squares.push(square);
     }
 }
-
+function endGame() {
+    return clearInterval(timerId);
+    playGameOverSound()
+}
 
 createBoard();   
 
-function startGame() {
+function startGame(){
     currentSnake.forEach(index => squares[index].classList.remove('snake'));
     squares[appleIndex].classList.remove('apple');
     clearInterval(timerId);
+    currentSnake = [2 , 1, 0];
+    score=0; direction=1; intervalTime=200;
+    scoreDisplay.textContent=score
+    currentSnake.forEach(index => squares[index].classList.add('snake'));
+    generateApple();
+    startMusic();
+    timerId = setInterval(move, intervalTime);
 }
-startGame();
 function move(){
     const newHead = currentSnake[0]+direction;
 
@@ -32,10 +41,9 @@ function move(){
     const hitLeft = (currentSnake[0]%20 === 0 && direction === -1)
     const hitSelf = squares[currentSnake[0]+direction]?.classList.contains('snake');
     if (hitRight || hitBottom || hitTop || hitLeft || hitSelf) {
-        return clearInterval(timerId);
+        return endGame();
     }
     const tail = currentSnake.pop();
-    let scoreDisplay = document.getElementById('score').style.display;
     if(squares[newHead].classList.contains('apple')) {
         squares[newHead].classList.remove('apple');
         squares[tail].classList.add('snake');
@@ -48,6 +56,30 @@ function move(){
       
     currentSnake.unshift(newHead);
     squares[newHead].classList.add('snake');
+    document.addEventListener('touchstart', e=> {
+        touchStartX = e.changedTouches[0].screenX;
+        touchStartY = e.changedTouches [0].screenY;
+    }, false);
+    document.addEventListener('touchstart', e=> {
+        touchEndX = e.changedTouches[0].screenX;
+        touchEndY = e.changedTouches [0].screenY;
+        handleSwipe();
+    }, false);
+}
+function handleSwipe(){
+    const dx=touchEndX-touchStartX
+    const dy= touchEndY-touchStartY
+    const absDx = Math.abs(dx);
+    const absDy = Math.abs(dy);
+    if(Math.max(absDx, absDy) >30)
+        if (absDx>absDy){
+            if (dx > 0) changeDir(-1);
+            else changeDir(1)
+        } else {
+            if (dy > 0)changeDir(20);
+            else changeDir(-20)
+        }
+        
 }
 function generateApple(){
     do{
@@ -69,11 +101,26 @@ document.addEventListener('keydown', (e) => {
     
 });
 
+const bgMusic = new Audio('assets/music.mp3');
+const eatSound = new Audio('assets/eat.mp3');
+const gameOverSound = new Audio('assets/gameOver.mp3');
+
+bgMusic.loop = true
+bgMusic.volume = 0.3;
 
 
+function playEatSound() {
+    eatSound.currentTime = 0;
+    eatSound.play();
+}
 
 
-setInterval(move, 200);
+function playGameOverSound() {
+    bgMusic.pause();
+    bgMusic.currentTime = 0;
+    gameOverSound.play();
+}
 
-
-
+function startMusic() {
+    bgMusic.play()
+}
