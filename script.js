@@ -14,8 +14,9 @@ function createBoard(){
     }
 }
 function endGame() {
+    playGameOverSound();
     return clearInterval(timerId);
-    playGameOverSound()
+    
 }
 
 createBoard();   
@@ -45,6 +46,7 @@ function move(){
     }
     const tail = currentSnake.pop();
     if(squares[newHead].classList.contains('apple')) {
+        playEatSound();
         squares[newHead].classList.remove('apple');
         squares[tail].classList.add('snake');
         currentSnake.push(tail);
@@ -105,12 +107,11 @@ const bgMusic = new Audio('assets/music.mp3');
 const eatSound = new Audio('assets/eat.mp3');
 const gameOverSound = new Audio('assets/gameOver.mp3');
 
-bgMusic.loop = true
-bgMusic.volume = 0.3;
 
 
 function playEatSound() {
-    eatSound.currentTime = 0;
+    bgMusic.pause();
+    bgMusic.currentTime = 0;
     eatSound.play();
 }
 
@@ -122,5 +123,7 @@ function playGameOverSound() {
 }
 
 function startMusic() {
+    bgMusic.pause();
+    bgMusic.currentTime=0;
     bgMusic.play()
 }
